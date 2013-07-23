@@ -155,12 +155,18 @@ class BaseRubyTask(sublime_plugin.TextCommand):
 
   def bundler_support(self):
     project_root = self.file_type(None, False).find_project_root()
+    if not os.path.isdir(project_root):
+      s = sublime.load_settings("RubyTest.last-run")
+      project_root = s.get("last_test_working_dir")
+
     gemfile_path = project_root + '/Gemfile'
+
     global COMMAND_PREFIX
     if not COMMAND_PREFIX:
       COMMAND_PREFIX = ""
+
     if os.path.isfile(gemfile_path):
-      COMMAND_PREFIX = COMMAND_PREFIX + " bundle exec "
+      COMMAND_PREFIX =  COMMAND_PREFIX + " bundle exec "
 
   def save_all(self):
     if SAVE_ON_RUN:
